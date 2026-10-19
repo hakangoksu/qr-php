@@ -1,0 +1,31 @@
+api_platform:
+    title: Contact QR API
+    description: >-
+        Create contacts and get QR codes that phone cameras offer to save as a contact (vCard 3.0).
+        Errors use RFC 9457 problem details (application/problem+json).
+    version: 1.0.0
+
+    # The API reads and writes through ContactService, like the form. API Platform does not
+    # use Doctrine itself, so this is off.
+    doctrine:
+        enabled: false
+
+    # Plain JSON instead of API Platform's default JSON-LD.
+    formats:
+        json: ['application/json']
+    docs_formats:
+        jsonopenapi: ['application/vnd.openapi+json']
+        html: ['text/html']
+    error_formats:
+        jsonproblem: ['application/problem+json']
+
+    defaults:
+        normalization_context:
+            # Write "phone": null instead of leaving the field out.
+            skip_null_values: false
+            # Keep "/" and "ö" as they are, not "\/" and "\u00f6".
+            # 320 = JSON_UNESCAPED_SLASHES (64) + JSON_UNESCAPED_UNICODE (256)
+            json_encode_options: 320
+        stateless: true
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']

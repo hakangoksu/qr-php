@@ -26,11 +26,12 @@ final class ContactInput
     #[Assert\Length(max: 100, maxMessage: 'Last name can be at most {{ limit }} characters.')]
     public ?string $lastName = null;
 
-    #[Assert\Email(message: 'Enter an email address like name@example.com.')]
+    // normalizer: 'trim' ignores spaces around the value. The form trims by itself, the API does not.
+    #[Assert\Email(message: 'Enter an email address like name@example.com.', normalizer: 'trim')]
     #[Assert\Length(max: 254, maxMessage: 'Email can be at most {{ limit }} characters.')]
     public ?string $email = null;
 
-    #[Assert\Regex(pattern: self::PHONE_PATTERN, message: 'Enter a phone number with 7 to 15 digits, for example +370 600 12345.')]
+    #[Assert\Regex(pattern: self::PHONE_PATTERN, message: 'Enter a phone number with 7 to 15 digits, for example +370 600 12345.', normalizer: 'trim')]
     #[Assert\Length(max: 32, maxMessage: 'Phone can be at most {{ limit }} characters.')]
     public ?string $phone = null;
 
@@ -41,7 +42,7 @@ final class ContactInput
     #[Assert\Length(max: 200, maxMessage: 'Street can be at most {{ limit }} characters.')]
     public ?string $street = null;
 
-    #[Assert\Regex(pattern: self::POSTAL_CODE_PATTERN, message: 'Postal code can contain letters, digits, spaces and hyphens.')]
+    #[Assert\Regex(pattern: self::POSTAL_CODE_PATTERN, message: 'Postal code can contain letters, digits, spaces and hyphens.', normalizer: 'trim')]
     #[Assert\Length(max: 20, maxMessage: 'Postal code can be at most {{ limit }} characters.')]
     public ?string $postalCode = null;
 
