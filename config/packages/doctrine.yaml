@@ -2,7 +2,12 @@ doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
 
+        # Set here, so Doctrine does not connect just to find out the version.
         server_version: '11.8.0-MariaDB'
+
+        # Give up connecting after 3 seconds, so /health answers quickly when the database is gone.
+        options:
+            !php/const PDO::ATTR_TIMEOUT: 3
 
         profiling_collect_backtrace: '%kernel.debug%'
     orm:

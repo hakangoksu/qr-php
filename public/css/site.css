@@ -129,3 +129,16 @@ button.primary, a.button {
 
 .pager { display: flex; gap: 1rem; align-items: center; margin-top: 1rem; }
 .empty { color: var(--muted); }
+
+/* Request log */
+.log-filters { display: flex; flex-wrap: wrap; gap: 0 1rem; align-items: flex-end; padding: 1rem 1rem 0.25rem; margin-bottom: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.log-filters .field { flex: 1 1 8rem; }
+.log-filters .wide-ish { flex: 2 1 14rem; }
+.log-filters .actions { flex: 0 0 auto; flex-direction: row; align-items: center; gap: 1rem; }
+select { font: inherit; padding: 0.5rem 0.6rem; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; }
+.logs td { font-size: 0.9rem; }
+.logs .path { font-family: ui-monospace, monospace; white-space: normal; overflow-wrap: anywhere; min-width: 12rem; }
+.logs .agent { max-width: 16rem; overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
+.logs .num, .logs .status { font-variant-numeric: tabular-nums; text-align: right; }
+.status-4xx { color: #b26b00; }
+.status-5xx { color: var(--error); font-weight: 600; }

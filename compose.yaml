@@ -1,9 +1,12 @@
 services:
   app:
     build: .
-    image: qr-symfony:m2
+    image: qr-php:local
     env_file:
       - .env.local
+    dns_opt:
+      - timeout:1
+      - attempts:1
     ports:
       - "127.0.0.1:8081:8080"
     depends_on:

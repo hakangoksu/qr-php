@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Request log{% endblock %}
+
+{% block body %}
+<h1>Request log</h1>
+<p class="lead">Every request the application handled, newest first. Times are UTC.</p>
+
+<form method="get" class="log-filters">
+    <div class="field">
+        <label for="source">Source</label>
+        <select id="source" name="source">
+            <option value="">Any</option>
+            {% for s in ['UI', 'API'] %}
+                <option value="{{ s }}"{{ filters.source == s ? ' selected' }}>{{ s }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="field">
+        <label for="status">Status</label>
+        <input id="status" name="status" type="number" min="100" max="599" value="{{ filters.status }}">
+    </div>
+    <div class="field">
+        <label for="method">Method</label>
+        <input id="method" name="method" value="{{ filters.method }}" placeholder="GET">
+    </div>
+    <div class="field wide-ish">
+        <label for="path">Path contains</label>
+        <input id="path" name="path" value="{{ filters.path }}" placeholder="/api/v1/contacts">
+    </div>
+    <div class="field">
+        <label for="from">From</label>
+        <input id="from" name="from" type="datetime-local" value="{{ filters.from ? filters.from|date('Y-m-d\\TH:i') }}">
+    </div>
+    <div class="field">
+        <label for="to">To</label>
+        <input id="to" name="to" type="datetime-local" value="{{ filters.to ? filters.to|date('Y-m-d\\TH:i') }}">
+    </div>
+    <div class="field actions">
+        <button type="submit" class="primary">Filter</button>
+        <a href="{{ path('logs') }}">Clear</a>
+    </div>
+</form>
+
+<p class="lead">{{ result.totalCount }} requests match.</p>
+
+{% if result.items is not empty %}
+    <div class="table-wrap">
+        <table class="history logs">
+            <thead>
+                <tr>
+                    <th scope="col">Time (UTC)</th><th scope="col">Source</th><th scope="col">Method</th><th scope="col">Path</th>
+                    <th scope="col">Status</th><th scope="col">ms</th><th scope="col">IP</th><th scope="col">User agent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for l in result.items %}
+                    <tr>
+                        <td><time datetime="{{ l.timestamp }}">{{ l.timestamp|date('Y-m-d H:i:s', 'UTC') }}</time></td>
+                        <td>{{ l.source }}</td>
+                        <td>{{ l.method }}</td>
+                        <td class="path">{{ l.path }}</td>
+                        <td class="status status-{{ (l.statusCode // 100) }}xx">{{ l.statusCode }}</td>
+                        <td class="num">{{ l.durationMs|number_format(1) }}</td>
+                        <td>{{ l.ipAddress }}</td>
+                        <td class="agent" title="{{ l.userAgent }}">{{ l.userAgent }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if result.totalPages > 1 %}
+        {% set query = app.request.query.all %}
+        <nav class="pager" aria-label="Pages">
+            {% if result.page > 1 %}<a href="{{ path('logs', query|merge({page: result.page - 1})) }}">Newer</a>{% endif %}
+            <span>Page {{ result.page }} of {{ result.totalPages }}</span>
+            {% if result.page < result.totalPages %}<a href="{{ path('logs', query|merge({page: result.page + 1})) }}">Older</a>{% endif %}
+        </nav>
+    {% endif %}
+{% endif %}
+{% endblock %}
