@@ -28,7 +28,7 @@ final class HealthControllerTest extends WebTestCase
 
         $client->request('GET', '/health');
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeSame(503);
         self::assertSame('Unhealthy', $client->getResponse()->getContent());
     }
 }
