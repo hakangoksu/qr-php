@@ -2,7 +2,7 @@ FROM composer:2.10.3 AS composer
 
 FROM dunglas/frankenphp:1.13-php8.4-trixie
 
-RUN install-php-extensions pdo_mysql zip opcache
+RUN install-php-extensions pdo_mysql zip opcache gd
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 

@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    image: qr-symfony:local
+    image: qr-symfony:m2
     env_file:
       - .env.local
     ports:

@@ -10,6 +10,6 @@ final class HomeController
     #[Route('/', name: 'home', methods: ['GET'])]
     public function __invoke(): Response
     {
-        return new Response('Contact QR (Symfony): walking skeleton', Response::HTTP_OK, ['Content-Type' => 'text/plain']);
+        return new Response('Contact QR (Symfony)', Response::HTTP_OK, ['Content-Type' => 'text/plain']);
     }
 }
