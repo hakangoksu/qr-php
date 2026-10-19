@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class RequestLoggingTest extends DatabaseTestCase
 {
+    // Login for the log (the password is in .env.test).
+    private const LOGIN = ['PHP_AUTH_USER' => 'reviewer', 'PHP_AUTH_PW' => 'test-password'];
+
     private mixed $originalTrustedProxies = null;
 
     protected function setUp(): void
@@ -136,7 +139,7 @@ final class RequestLoggingTest extends DatabaseTestCase
     {
         $this->client->request('GET', '/contacts/999');
 
-        $this->client->request('GET', '/logs?status=404');
+        $this->client->request('GET', '/logs?status=404', server: self::LOGIN);
         $html = (string) $this->client->getResponse()->getContent();
 
         self::assertStringContainsString('1 requests match.', $html);
@@ -159,7 +162,7 @@ final class RequestLoggingTest extends DatabaseTestCase
      */
     private function search(string $query): array
     {
-        $this->client->request('GET', '/api/v1/request-logs'.$query, server: ['HTTP_ACCEPT' => 'application/json']);
+        $this->client->request('GET', '/api/v1/request-logs'.$query, server: ['HTTP_ACCEPT' => 'application/json'] + self::LOGIN);
 
         return json_decode((string) $this->client->getResponse()->getContent(), true);
     }

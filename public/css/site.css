@@ -142,3 +142,8 @@ select { font: inherit; padding: 0.5rem 0.6rem; color: var(--text); background: 
 .logs .num, .logs .status { font-variant-numeric: tabular-nums; text-align: right; }
 .status-4xx { color: #b26b00; }
 .status-5xx { color: var(--error); font-weight: 600; }
+
+/* Contact search */
+.search { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; align-items: center; margin: 0 0 1rem; }
+.search label { margin: 0; }
+.search input { flex: 1 1 16rem; min-width: 0; }

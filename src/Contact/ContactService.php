@@ -48,14 +48,24 @@ final class ContactService
      *
      * @return array{items: list<array{id: int, first_name: string, last_name: string, email: ?string, phone: ?string, created_at: string}>, page: int, pageSize: int, totalCount: int, totalPages: int}
      */
-    public function list(int $page): array
+    public function list(int $page, ?string $search = null): array
     {
         $page = max(1, $page);
-        $total = (int) $this->connection->fetchOne('SELECT COUNT(*) FROM contacts');
+
+        // Search in name, email, phone and organization. MariaDB ignores case here.
+        // % and _ in the search text are escaped, so they are not wildcards.
+        $where = '';
+        $params = ['limit' => self::PAGE_SIZE, 'offset' => ($page - 1) * self::PAGE_SIZE];
+        if (null !== $search && '' !== trim($search)) {
+            $where = 'WHERE first_name LIKE :q OR last_name LIKE :q OR email LIKE :q OR phone LIKE :q OR organization LIKE :q';
+            $params['q'] = '%'.addcslashes(trim($search), '\\%_').'%';
+        }
+
+        $total = (int) $this->connection->fetchOne("SELECT COUNT(*) FROM contacts $where", array_diff_key($params, ['limit' => 0, 'offset' => 0]));
         $items = $this->connection->fetchAllAssociative(
-            'SELECT id, first_name, last_name, email, phone, created_at FROM contacts
-             ORDER BY created_at DESC, id DESC LIMIT :limit OFFSET :offset',
-            ['limit' => self::PAGE_SIZE, 'offset' => ($page - 1) * self::PAGE_SIZE],
+            "SELECT id, first_name, last_name, email, phone, created_at FROM contacts $where
+             ORDER BY created_at DESC, id DESC LIMIT :limit OFFSET :offset",
+            $params,
             ['limit' => ParameterType::INTEGER, 'offset' => ParameterType::INTEGER],
         );
 

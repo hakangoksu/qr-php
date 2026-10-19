@@ -19,6 +19,7 @@ final class RequestLogger
     public function __construct(
         private readonly Connection $connection,
         private readonly LoggerInterface $logger,
+        private readonly RequestLogRetention $retention,
     ) {
     }
 
@@ -46,6 +47,8 @@ final class RequestLogger
                 'source' => RequestSource::classify($path),
                 'duration_ms' => round($durationMs, 3),
             ]);
+            // Now and then delete old rows (RequestLogRetention).
+            $this->retention->maybePrune();
         } catch (\Throwable $exception) {
             // If the log write fails, only note it in the app log. The response is already sent.
             $this->logger->error('Could not store the request log for {method} {path}', [

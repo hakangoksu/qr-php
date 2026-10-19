@@ -1,0 +1,8 @@
+framework:
+    rate_limiter:
+        # New contacts per IP. 10 a minute is far more than a person types. The counters
+        # are in the app's cache and start again when the container is recreated.
+        contact_creation:
+            policy: fixed_window
+            limit: '%env(int:RATE_LIMIT_CONTACTS_PER_MINUTE)%'
+            interval: '1 minute'

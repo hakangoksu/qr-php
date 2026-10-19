@@ -28,6 +28,10 @@ use Symfony\Component\Validator\Constraints as Assert;
                     // Checked before the provider runs: "abc" gives a 422 with this message.
                     constraints: [new Assert\Regex('/^[1-9]\d*$/', message: 'Page must be a whole number, 1 or more.')],
                 ),
+                'q' => new QueryParameter(
+                    schema: ['type' => 'string'],
+                    description: 'Searches first name, last name, email, phone and organization (case-insensitive).',
+                ),
             ],
             openapi: new OpenApiOperation(
                 summary: 'List contacts, newest first',

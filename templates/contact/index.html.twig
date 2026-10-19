@@ -5,8 +5,17 @@
 {% block body %}
 <h1>History</h1>
 
-{% if result.totalCount == 0 %}
+<form method="get" class="search" role="search">
+    <label for="q">Search</label>
+    <input id="q" name="q" type="search" value="{{ search }}" placeholder="Name, email, phone or organization">
+    <button type="submit" class="primary">Search</button>
+    {% if search %}<a href="{{ path('contact_index') }}">Clear</a>{% endif %}
+</form>
+
+{% if result.totalCount == 0 and not search %}
     <p class="empty">No contacts yet. <a href="{{ path('contact_new') }}">Create the first one</a>.</p>
+{% elseif result.totalCount == 0 %}
+    <p class="empty">No contact matches "{{ search }}".</p>
 {% else %}
     <p class="lead">{{ result.totalCount }} contacts, newest first.</p>
     <div class="table-wrap">
@@ -29,9 +38,9 @@
 
     {% if result.totalPages > 1 %}
         <nav class="pager" aria-label="Pages">
-            {% if result.page > 1 %}<a href="{{ path('contact_index', {page: result.page - 1}) }}">Newer</a>{% endif %}
+            {% if result.page > 1 %}<a href="{{ path('contact_index', {page: result.page - 1, q: search ?: null}) }}">Newer</a>{% endif %}
             <span>Page {{ result.page }} of {{ result.totalPages }}</span>
-            {% if result.page < result.totalPages %}<a href="{{ path('contact_index', {page: result.page + 1}) }}">Older</a>{% endif %}
+            {% if result.page < result.totalPages %}<a href="{{ path('contact_index', {page: result.page + 1, q: search ?: null}) }}">Older</a>{% endif %}
         </nav>
     {% endif %}
 {% endif %}

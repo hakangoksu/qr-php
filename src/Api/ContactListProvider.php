@@ -22,7 +22,7 @@ final class ContactListProvider implements ProviderInterface
         $request = $context['request'] ?? null;
         $page = $request?->query->getInt('page', 1) ?? 1;
 
-        $result = $this->contacts->list($page);
+        $result = $this->contacts->list($page, $request?->query->getString('q'));
 
         // Database column names (first_name) to API names (firstName).
         $items = array_map(static fn (array $row): array => [

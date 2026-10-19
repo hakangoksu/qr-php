@@ -46,7 +46,11 @@ final class ContactController extends AbstractController
     public function index(Request $request): Response
     {
         return $this->render('contact/index.html.twig', [
-            'result' => $this->contacts->list($request->query->getInt('page', 1)),
+            'result' => $this->contacts->list(
+                preg_match('/^[1-9]\d*$/', (string) $request->query->get('page', '1')) ? (int) $request->query->get('page', '1') : 1,
+                $request->query->getString('q'),
+            ),
+            'search' => $request->query->getString('q'),
         ]);
     }
 
@@ -61,7 +65,9 @@ final class ContactController extends AbstractController
         ]);
     }
 
-
+    /**
+     * The QR image. With ?download=true the browser saves it instead of showing it.
+     */
     #[Route('/contacts/{id}/qr.png', name: 'contact_qr', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function qr(int $id, Request $request): Response
     {
