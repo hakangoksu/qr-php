@@ -1,0 +1,11 @@
+/vendor/
+/var/
+/tests/
+/.git/
+/.gitea/
+/.env.local
+/.env.*.local
+/.env.local.example
+/.env.db.local.example
+/phpunit.xml
+/.phpunit.cache/

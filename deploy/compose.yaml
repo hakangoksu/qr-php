@@ -1,0 +1,53 @@
+name: qr-php
+
+services:
+  app:
+    image: ghcr.io/hakangoksu/qr-php:${APP_TAG:?APP_TAG is not set}
+    restart: unless-stopped
+    environment:
+      APP_SECRET: ${APP_SECRET:?}
+      DATABASE_URL: "mysql://${DB_USER:?}:${DB_PASSWORD:?}@db:3306/${DB_NAME:?}?charset=utf8mb4"
+      SERVER_NAME: "qr.goksu.me, http://:8080"
+      CADDY_SERVER_EXTRA_DIRECTIVES: |
+        header {
+          Strict-Transport-Security "max-age=63072000"
+          X-Content-Type-Options "nosniff"
+          Referrer-Policy "no-referrer"
+          -Server
+          -X-Powered-By
+        }
+        request_body {
+          max_size 1MB
+        }
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+      - "127.0.0.1:5103:8080"
+    volumes:
+      - caddy-data:/data/caddy
+      - caddy-config:/config/caddy
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mariadb:11.8
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  db-data:
+  caddy-data:
+  caddy-config:
