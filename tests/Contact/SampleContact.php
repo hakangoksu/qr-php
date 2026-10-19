@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Contact;
+namespace App\Tests\Contact;
 
 use App\Entity\Contact;
 
+/**
+ * An example contact for the tests. The comma and semicolon in the organization are on purpose.
+ */
 final class SampleContact
 {
     public static function create(): Contact

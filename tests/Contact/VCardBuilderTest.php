@@ -2,7 +2,6 @@
 
 namespace App\Tests\Contact;
 
-use App\Contact\SampleContact;
 use App\Contact\VCardBuilder;
 use App\Entity\Contact;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -72,7 +71,7 @@ final class VCardBuilderTest extends TestCase
 
     public function testALineBreakInsideAValueCannotStartANewProperty(): void
     {
-        // Without escaping, this street would inject a second EMAIL line into the card.
+        // Without escaping, this street would add a fake EMAIL line to the card.
         $contact = (new Contact('Ada', 'Lovelace'))->setStreet("Main St\r\nEMAIL:attacker@example.com");
 
         $lines = explode("\r\n", $this->builder->build($contact));

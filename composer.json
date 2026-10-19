@@ -11,11 +11,16 @@
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.7",
         "endroid/qr-code": "^6.1",
+        "symfony/asset": "7.4.*",
         "symfony/console": "7.4.*",
         "symfony/dotenv": "7.4.*",
         "symfony/flex": "^2",
+        "symfony/form": "7.4.*",
         "symfony/framework-bundle": "7.4.*",
         "symfony/runtime": "7.4.*",
+        "symfony/security-csrf": "7.4.*",
+        "symfony/twig-bundle": "7.4.*",
+        "symfony/validator": "7.4.*",
         "symfony/yaml": "7.4.*"
     },
     "config": {
@@ -76,6 +81,8 @@
         "khanamiryan/qrcode-detector-decoder": "^2.0",
         "phpunit/phpunit": "^13.4",
         "symfony/browser-kit": "7.4.*",
-        "symfony/css-selector": "7.4.*"
+        "symfony/css-selector": "7.4.*",
+        "symfony/http-client": "^7.4",
+        "testcontainers/testcontainers": "^1.1"
     }
 }

@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New contact{% endblock %}
+
+{% block body %}
+<h1>New contact</h1>
+<p class="lead">Fill in the details and get a QR code that phone cameras offer to save as a contact.</p>
+
+{{ form_start(form, {attr: {class: 'contact-form', novalidate: 'novalidate'}}) }}
+    {% if form.vars.errors|length > 0 %}
+        <div class="error-summary"><ul>
+            {% for error in form.vars.errors %}<li>{{ error.message }}</li>{% endfor %}
+        </ul></div>
+    {% endif %}
+
+    <fieldset>
+        <legend>Name</legend>
+        <div class="row">
+            {{ include('contact/_field.html.twig', {field: form.firstName}) }}
+            {{ include('contact/_field.html.twig', {field: form.lastName}) }}
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>How to reach them</legend>
+        <p class="hint">At least one of the two.</p>
+        <div class="row">
+            {{ include('contact/_field.html.twig', {field: form.email}) }}
+            {{ include('contact/_field.html.twig', {field: form.phone}) }}
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>More details <span class="optional">optional</span></legend>
+        <div class="row">
+            {{ include('contact/_field.html.twig', {field: form.birthday}) }}
+            {{ include('contact/_field.html.twig', {field: form.organization}) }}
+            {{ include('contact/_field.html.twig', {field: form.jobTitle}) }}
+        </div>
+        <div class="row">
+            {{ include('contact/_field.html.twig', {field: form.street, wide: true}) }}
+        </div>
+        <div class="row">
+            {{ include('contact/_field.html.twig', {field: form.postalCode}) }}
+            {{ include('contact/_field.html.twig', {field: form.city}) }}
+            {{ include('contact/_field.html.twig', {field: form.country}) }}
+        </div>
+    </fieldset>
+
+    <button type="submit" class="primary">Create QR code</button>
+{{ form_end(form) }}
+{% endblock %}

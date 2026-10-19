@@ -2,14 +2,18 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * "/" opens the form.
+ */
 final class HomeController
 {
     #[Route('/', name: 'home', methods: ['GET'])]
-    public function __invoke(): Response
+    public function __invoke(UrlGeneratorInterface $urls): RedirectResponse
     {
-        return new Response('Contact QR (Symfony)', Response::HTTP_OK, ['Content-Type' => 'text/plain']);
+        return new RedirectResponse($urls->generate('contact_new'));
     }
 }

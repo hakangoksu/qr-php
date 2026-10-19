@@ -1,0 +1,8 @@
+{# One form field: label, input and its error messages. #}
+<div class="field{{ wide|default(false) ? ' wide' : '' }}">
+    {{ form_label(field) }}
+    {{ form_widget(field, {attr: field.vars.valid ? {} : {class: 'input-validation-error'}}) }}
+    {% for error in field.vars.errors %}
+        <span class="field-error">{{ error.message }}</span>
+    {% endfor %}
+</div>

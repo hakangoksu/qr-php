@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}History{% endblock %}
+
+{% block body %}
+<h1>History</h1>
+
+{% if result.totalCount == 0 %}
+    <p class="empty">No contacts yet. <a href="{{ path('contact_new') }}">Create the first one</a>.</p>
+{% else %}
+    <p class="lead">{{ result.totalCount }} contacts, newest first.</p>
+    <div class="table-wrap">
+        <table class="history">
+            <thead>
+                <tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Phone</th><th scope="col">Created (UTC)</th></tr>
+            </thead>
+            <tbody>
+                {% for c in result.items %}
+                    <tr>
+                        <td><a href="{{ path('contact_show', {id: c.id}) }}">{{ c.first_name }} {{ c.last_name }}</a></td>
+                        <td>{{ c.email }}</td>
+                        <td>{{ c.phone }}</td>
+                        <td><time datetime="{{ c.created_at|date('c', 'UTC') }}">{{ c.created_at|date('Y-m-d H:i', 'UTC') }}</time></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if result.totalPages > 1 %}
+        <nav class="pager" aria-label="Pages">
+            {% if result.page > 1 %}<a href="{{ path('contact_index', {page: result.page - 1}) }}">Newer</a>{% endif %}
+            <span>Page {{ result.page }} of {{ result.totalPages }}</span>
+            {% if result.page < result.totalPages %}<a href="{{ path('contact_index', {page: result.page + 1}) }}">Older</a>{% endif %}
+        </nav>
+    {% endif %}
+{% endif %}
+{% endblock %}

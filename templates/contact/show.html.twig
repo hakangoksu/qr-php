@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% set name = contact.firstName ~ ' ' ~ contact.lastName %}
+
+{% block title %}{{ name }}{% endblock %}
+
+{% block body %}
+<p class="breadcrumb"><a href="{{ path('contact_index') }}">History</a></p>
+<h1>{{ name }}</h1>
+
+<div class="details">
+    <section class="qr">
+        <img src="{{ path('contact_qr', {id: contact.id}) }}" alt="QR code with the contact details of {{ name }}" width="300" height="300">
+        <a class="button" href="{{ path('contact_qr', {id: contact.id, download: 'true'}) }}">Download QR code (PNG)</a>
+        <p class="hint">Point a phone camera at the code to save the contact.</p>
+    </section>
+
+    <section>
+        <dl class="fields">
+            {% if contact.email %}<dt>Email</dt><dd>{{ contact.email }}</dd>{% endif %}
+            {% if contact.phone %}<dt>Phone</dt><dd>{{ contact.phone }}</dd>{% endif %}
+            {% if contact.birthday %}<dt>Birthday</dt><dd>{{ contact.birthday|date('Y-m-d') }}</dd>{% endif %}
+            {% if contact.organization %}<dt>Organization</dt><dd>{{ contact.organization }}</dd>{% endif %}
+            {% if contact.jobTitle %}<dt>Job title</dt><dd>{{ contact.jobTitle }}</dd>{% endif %}
+            {# Only the address lines that are filled in. #}
+            {% set address = [contact.street, [contact.postalCode, contact.city]|filter(p => p)|join(' '), contact.country]|filter(line => line) %}
+            {% if address is not empty %}<dt>Address</dt><dd>{{ address|join("\n")|nl2br }}</dd>{% endif %}
+            <dt>Created</dt><dd><time datetime="{{ contact.createdAt|date('c', 'UTC') }}">{{ contact.createdAt|date('Y-m-d H:i', 'UTC') }} UTC</time></dd>
+        </dl>
+
+        <details>
+            <summary>Text inside the QR code (vCard 3.0)</summary>
+            <pre class="vcard">{{ vcard }}</pre>
+        </details>
+    </section>
+</div>
+{% endblock %}

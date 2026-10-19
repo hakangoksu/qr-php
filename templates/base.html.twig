@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Contact QR{% endblock %} · Contact QR</title>
+        <link rel="stylesheet" href="{{ asset('css/site.css') }}">
+    </head>
+    <body>
+        <header class="site-header">
+            <a class="brand" href="{{ path('home') }}">Contact QR</a>
+            <nav aria-label="Main">
+                <a href="{{ path('contact_new') }}">New contact</a>
+                <a href="{{ path('contact_index') }}">History</a>
+            </nav>
+        </header>
+        <main class="page">
+            {% block body %}{% endblock %}
+        </main>
+    </body>
+</html>

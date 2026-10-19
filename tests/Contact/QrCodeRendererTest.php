@@ -3,7 +3,6 @@
 namespace App\Tests\Contact;
 
 use App\Contact\QrCodeRenderer;
-use App\Contact\SampleContact;
 use App\Contact\VCardBuilder;
 use App\Entity\Contact;
 use PHPUnit\Framework\TestCase;
@@ -18,8 +17,7 @@ final class QrCodeRendererTest extends TestCase
         $png = (new QrCodeRenderer())->renderPng((new VCardBuilder())->build(SampleContact::create()));
 
         self::assertSame(self::PNG_SIGNATURE, substr($png, 0, 8));
-        // The first chunk of every PNG is IHDR: width and height are big-endian
-        // 32-bit integers at bytes 16 and 20. 'N' unpacks exactly that.
+        // In a PNG, width and height are 4-byte numbers at bytes 16 and 20.
         ['width' => $width, 'height' => $height] = unpack('Nwidth/Nheight', substr($png, 16, 8));
         self::assertSame($width, $height);
         self::assertGreaterThanOrEqual(250, $width);
@@ -40,7 +38,7 @@ final class QrCodeRendererTest extends TestCase
     }
 
     /**
-     * Decodes the PNG with a PHP port of ZXing, a reader that shares no code with endroid or Bacon.
+     * Reads the PNG back with a separate QR reader (a PHP port of ZXing).
      */
     private function decode(string $png): string
     {

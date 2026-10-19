@@ -1,6 +1,5 @@
 /vendor/
 /var/
-/tests/
 /.git/
 /.gitea/
 /.env.local
